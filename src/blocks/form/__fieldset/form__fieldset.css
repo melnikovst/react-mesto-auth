@@ -1,0 +1,15 @@
+.form__fieldset {
+    display: flex;
+    flex-direction: column;
+    border: none;
+    padding: 0;
+    /* row-gap: 30px; */
+    margin: 0;
+    width: calc(100% - 44px);
+}
+
+@media screen and (min-width: 768px) {
+    .form__fieldset {
+        width: calc(100% - 72px);
+    }
+}

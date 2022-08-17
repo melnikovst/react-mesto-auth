@@ -1,0 +1,27 @@
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(282px, 1fr));
+    row-gap: 20px;
+    justify-items: center;
+    max-width: 100%;
+    margin: 0 19px;
+    padding-bottom: 48px;
+}
+
+@media screen and (min-width: 500px) {
+    .cards {
+        column-gap: 17px;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .cards {
+        padding-bottom: 67px;
+    }
+}
+
+@media screen and (min-width: 900px) {
+    .cards {
+        margin: 0;
+    }
+}

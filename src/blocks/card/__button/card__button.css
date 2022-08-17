@@ -1,0 +1,17 @@
+.card__button {
+    background-image: url(../../../images/Vector-card.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    border: none;
+    width: 22px;
+    height: 19px;
+    background-color: #fff;
+    transition: all 0.1s ease;
+    padding: 0;
+}
+
+.card__button:hover {
+    transform: scale(1.15);
+    opacity: 0.5;
+    cursor: pointer;
+}

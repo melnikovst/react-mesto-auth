@@ -1,0 +1,7 @@
+.card__likes_container_wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 22px;
+    height: 35px;
+    justify-content: space-between;
+}

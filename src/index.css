@@ -1,13 +1,103 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
+  width: 100%;
+  background-color: #000;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+@import url(./vendor/normalize.css);
+
+@import url(./fonts/Inter.css);
+
+/* ROOT */
+
+@import url(./blocks/root/root.css);
+@import url(./blocks/page/page.css);
+
+/* HEADER */
+
+@import url(./blocks/header/header.css);
+@import url(./blocks/logo/logo.css);
+
+/* SECTION PROFILE */
+
+@import url(./blocks/profile/profile.css);
+@import url(./blocks/profile/__wrapper/profile__wrapper.css);
+@import url(./blocks/profile/__image/profile__image.css);
+@import url(./blocks/profile/__image/_while_loading/profile__image_while_loading.css);
+@import url(./blocks/profile/__avatar-container/profile__avatar-container.css);
+@import url(./blocks/profile/__substrate/profile__substrate.css);
+@import url(./blocks/profile/__title-container/profile__title-container.css);
+@import url(./blocks/profile/__title/profile__title.css);
+@import url(./blocks/profile/__title-button/profile__title-button.css);
+@import url(./blocks/profile/__title-button-vector/profile__title-button-vector.css);
+@import url(./blocks/profile/__subtitle/profile__subtitle.css);
+@import url(./blocks/profile/__button/profile__button.css);
+@import url(./blocks/profile/__button-vector/profile__button-vector.css);
+@import url(./blocks/profile/__text-wrapper/profile__text-wrapper.css);
+
+/* SECTION CARDS */
+
+@import url(./blocks/card/card.css);
+@import url(./blocks/cards/cards.css);
+@import url(./blocks/card/__image/card__image.css);
+@import url(./blocks/card/__title-wrapper/card__title-wrapper.css);
+@import url(./blocks/card/__title/card__title.css);
+@import url(./blocks/card/__button/card__button.css);
+@import url(./blocks/card/__likes_container_wrapper/card__likes_container_wrapper.css);
+@import url(./blocks/card/__like_amount/card__like_amount.css);
+@import url(./blocks/card/__button/_active/card__button_active.css);
+@import url(./blocks/card/__delete-button/card__delete-button.css);
+
+/* HEADER */
+
+@import url(./blocks/footer/footer.css);
+@import url(./blocks/footer/__copyright/footer__copyright.css);
+
+/* POPUP */
+
+@import url(./blocks/popup/popup.css);
+@import url(./blocks/popup/__button-escape/popup__button-escape.css);
+@import url(./blocks/popup/__container/popup__container.css);
+@import url(./blocks/popup/__title/popup__title.css);
+@import url(./blocks/popup/__image-item/popup__image-item.css);
+@import url(./blocks/popup/__image/popup__image.css);
+@import url(./blocks/popup/__image-subtitle/popup__image-subtitle.css);
+@import url(./blocks/popup/__image_edit/popup__image_edit.css);
+@import url(./blocks/popup/_type_picture/popup_type_picture.css);
+@import url(./blocks/popup/_animated/popup_animated.css);
+@import url(./blocks/popup/_opened/popup_opened.css);
+
+/* FORM */
+
+@import url(./blocks/form/form.css);
+@import url(./blocks/form/__fieldset/form__fieldset.css);
+@import url(./blocks/form/__input/form__input.css);
+@import url(./blocks/form/__button/form__button.css);
+@import url(./blocks/form/__input/_invalid/form__input_invalid.css);
+@import url(./blocks/form/__invalid-message/form__invalid-message.css);
+@import url(./blocks/form/__invalid-message/_active/form__invalid-message_active.css);
+@import url(./blocks/form/__button/_disabled/form__button_disabled.css);
+
+/* SUBSTRATE */
+
+@import url(./blocks/substrate/substrate.css);
+@import url(./blocks/substrate/_while_loading/substrate_while_loading.css);
+@import url(./blocks/substrate/__container/substrate__container.css);
+@import url(./blocks/substrate/__letter/substrate__letter.css);
+@import url(./blocks/substrate/__letter/_size_large/substrate__letter_size_large.css);
+@import url(./blocks/substrate/_active/substrate_active.css);
+
+/* ANIMATIONS */
+
+@import url(./blocks/breathing/breathing.css);
+@import url(./blocks/spinner-circle/spinner-circle.css);
+
+/* SPINNER */
+
+@import url(./blocks/spinner/spinner.css);
+@import url(./blocks/spinner/_visible/spinner_visible.css);

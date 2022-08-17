@@ -1,0 +1,27 @@
+.profile__title-button {
+    width: 18px;
+    height: 18px;
+    background-color: #000;
+    border: 1px solid #FFFFFF;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.1s ease;
+    /* Не стал прижимать кнопку к нижней оси, наставник сказал, что лучшее решение - 
+    выровнять с небольшим расхождением с макетом.
+    */
+    -webkit-box-sizing: border-box;
+}
+
+.profile__title-button:hover {
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+@media screen and (min-width: 768px) {
+    .profile__title-button {
+        width: 24px;
+        height: 24px;
+    }
+}

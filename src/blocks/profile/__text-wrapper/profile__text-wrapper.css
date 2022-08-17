@@ -1,0 +1,6 @@
+.profile__text-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
