@@ -47,20 +47,42 @@ const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) => {
         <div className="profile__wrapper">
           <div onClick={onEditAvatar} className="profile__avatar-container">
             <div className="spinner"></div>
-            <img src={userAvatar} alt="Что-то пошло не так :(" className="profile__image" />
+            <img
+              src={userAvatar}
+              alt="Что-то пошло не так :("
+              className="profile__image"
+            />
             <div className="profile__substrate"></div>
           </div>
           <div className="profile__text-wrapper">
             <div className="profile__title-container">
               <h1 className="profile__title">{userName}</h1>
-              <button type="button" aria-label="Редактировать профиль" className="profile__title-button" onClick={onEditProfile}>
-                <img src={updateProfileInfoBtn} alt="Кнопка Редактировать" className="profile__title-button-vector" />
+              <button
+                type="button"
+                aria-label="Редактировать профиль"
+                className="profile__title-button"
+                onClick={onEditProfile}
+              >
+                <img
+                  src={updateProfileInfoBtn}
+                  alt="Кнопка Редактировать"
+                  className="profile__title-button-vector"
+                />
               </button>
             </div>
             <p className="profile__subtitle">{userDesciption}</p>
           </div>
-          <button type="button" aria-label="Добавить" className="profile__button" onClick={onAddPlace}>
-            <img src={addCardBtn} alt="Кнопка профиля" className="profile__button-vector" />
+          <button
+            type="button"
+            aria-label="Добавить"
+            className="profile__button"
+            onClick={onAddPlace}
+          >
+            <img
+              src={addCardBtn}
+              alt="Кнопка профиля"
+              className="profile__button-vector"
+            />
           </button>
         </div>
       </section>
