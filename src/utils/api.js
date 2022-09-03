@@ -24,12 +24,17 @@ class Api {
     }).then(this._handleResponse));
   }
 
-  putLike(obj) {
+  _handleLike(string, obj) {
     this._like = fetch(`${this._url}/cards/${obj._id}/likes`, {
-      method: 'PUT',
+      method: string,
       headers: this._headers,
     }).then(this._handleResponse);
     return this._like;
+  }
+
+  changeLikeCardStatus(obj, variable) {
+    this._status = variable ? this._handleLike('PUT', obj) : this._handleLike('DELETE', obj);
+    return this._status;
   }
 
   deleteLike(obj) {
@@ -52,13 +57,13 @@ class Api {
     return this._changedProfile;
   }
 
-  addCard(obj) {
+  addCard({title, link}) {
     this._addedCard = fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify({
-        name: obj.title,
-        link: obj.link,
+        name: title,
+        link: link,
       }),
     }).then(this._handleResponse);
     return this._addedCard;

@@ -1,4 +1,4 @@
-const PopupWithForm = ({ title, children, onClose }) => {
+const PopupWithForm = ({ title, children, onClose, onSubmit }) => {
   return (
     <div className="popup__container">
       <button
@@ -8,7 +8,7 @@ const PopupWithForm = ({ title, children, onClose }) => {
         className="popup__button-escape popup__button-escape_card"
       ></button>
       <h2 className="popup__title">{title}</h2>
-      <form name="card-form" className="form form_popup_template" noValidate>
+      <form name="card-form" className="form form_popup_template" noValidate onSubmit={onSubmit}>
         {children}
         <button
           type="submit"
