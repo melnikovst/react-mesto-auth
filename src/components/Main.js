@@ -3,21 +3,34 @@ import addCardBtn from '../images/Vector2.svg';
 import Card from './Card';
 import { useContext } from 'react';
 import CurrentUserContext from '../contexts/CurrentUserContext';
+import Loader from './Loader';
+import Error from './Error'
 
-const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onCardLike, onCardDelete }) => {
+const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onCardLike, onCardDelete, isLoading, error, openDeletingPopup }) => {
   const profileContext = useContext(CurrentUserContext);
   const { avatar, name, about } = profileContext;
+  const avatarClasses = `spinner ${isLoading ? "spinner_visible" : ""}`
+  const profileImgClasses = `profile__image ${isLoading ? "profile__image_while_loading" : ""}`;
+  console.log(name);
+
+  if (error) {
+    return <Error />
+  }
+
+  if ((avatar === undefined)) {
+    return <Loader />
+  }
 
   return (
     <main className="content">
       <section className="profile">
         <div className="profile__wrapper">
           <div onClick={onEditAvatar} className="profile__avatar-container">
-            <div className="spinner"></div>
+            <div className={avatarClasses}></div>
             <img
               src={avatar}
               alt="Что-то пошло не так :("
-              className="profile__image"
+              className={profileImgClasses}
             />
             <div className="profile__substrate"></div>
           </div>
@@ -55,7 +68,15 @@ const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onC
       </section>
       <section className="cards">
         {cards.map((card) => {
-          return <Card onCardClick={onCardClick} key={card._id} card={card} user={profileContext} onCardLike={onCardLike} onCardDelete={onCardDelete} />;
+          return <Card 
+          onCardClick={onCardClick} 
+          key={card._id} 
+          card={card} 
+          user={profileContext} 
+          onCardLike={onCardLike} 
+          onCardDelete={onCardDelete} 
+          openDeletingPopup={openDeletingPopup} 
+          />;
         })}
       </section>
     </main>

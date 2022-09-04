@@ -1,7 +1,6 @@
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import Popup from './Popup';
 import EditProfilePopup from './EditProfilePopup';
@@ -10,6 +9,7 @@ import { server } from '../utils/api'
 import { useEffect, useState } from 'react';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import SubmitDeletingCard from './SubmitDeletingCard';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -19,13 +19,22 @@ function App() {
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState({})
   const [cards, setCards] = useState([]);
+  const [isAvatarLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [isDeletingPopupOpen, setIsDeletingPopupOpen] = useState(false);
+  const [cardDel, setCard] = useState({});
+  const [isDeletedCardLoading, setIsDeletedCardLoading] = useState(false);
 
   const { _id } = currentUser;
+
+  const openDeletingPopup = (card) => {
+    setIsDeletingPopupOpen(true);
+    setCard(card);
+  }
 
   const handleAddPlaceSubmit = async (obj) => {
     try {
       const resAdding = await server.addCard(obj);
-      console.log(resAdding);
       setCards([resAdding, ...cards])
     } catch (error) {
       console.log(error);
@@ -42,39 +51,35 @@ function App() {
     }
   }
 
-  const handleDeleting = async (card) => {
+  console.log(cardDel);
+
+  const handleDeleting = async () => {
+    setIsDeletedCardLoading(true);
     try {
-      await server.deleteCard(card);
-      setCards((newArray) => newArray.filter((item) => card._id !== item._id))
+      await server.deleteCard(cardDel);
+      setCards((newArray) => newArray.filter((item) => cardDel._id !== item._id))
+      closeAllPopups();
+      setTimeout(() => {
+        setIsDeletedCardLoading(false);
+      }, 500)
     } catch (error) {
       console.log(error);
     }
   }
 
-  const fetchCards = async () => {
+  const fetchData = async () => {
     try {
-      const resCards = await server.loadCards();
-      setCards(resCards);
-    } catch (e) {
-      console.log(e);
+      const [profileObject, cards] = await Promise.all([server.loadProfile(), server.loadCards()])
+      setCards(cards);
+      setCurrentUser(profileObject);
+    } catch (error) {
+      console.log(error);
+      setError(true);
     }
   }
 
   useEffect(() => {
-    fetchCards();
-  }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const resProfile = await server.loadProfile();
-      setCurrentUser(resProfile);
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  useEffect(() => {
-    fetchProfile()
+    fetchData();
   }, []);
 
   const closeAllPopups = () => {
@@ -83,6 +88,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setSelectedCard({});
+    setIsDeletingPopupOpen(false)
   };
 
   const handleCardClick = (object) => {
@@ -119,10 +125,12 @@ function App() {
   }
 
   const handleUpdateAvatar = async (object) => {
+    setIsLoading(true)
     try {
       const resAvatar = await server.setNewAvatar(object);
       setCurrentUser(resAvatar);
       closeAllPopups();
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -141,6 +149,9 @@ function App() {
             cards={cards}
             onCardLike={handleCardLike}
             onCardDelete={handleDeleting}
+            isLoading={isAvatarLoading}
+            error={error}
+            openDeletingPopup={openDeletingPopup}
           />
           <Footer />
           <Popup
@@ -149,7 +160,9 @@ function App() {
             onClose={closeAllPopups}
             closeByOverlay={closeByOverlay}
           >
-            <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+            <EditProfilePopup isOpen={isEditProfilePopupOpen} 
+            onClose={closeAllPopups} 
+            onUpdateUser={handleUpdateUser} />
           </Popup>
           <Popup
             name="card-add"
@@ -157,7 +170,10 @@ function App() {
             onClose={closeAllPopups}
             closeByOverlay={closeByOverlay}
           >
-            <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onUpdatePlace={handleAddPlaceSubmit} />
+            <AddPlacePopup 
+            isOpen={isAddPlacePopupOpen} 
+            onClose={closeAllPopups} 
+            onUpdatePlace={handleAddPlaceSubmit} />
           </Popup>
           <Popup
             name="avatar"
@@ -165,17 +181,22 @@ function App() {
             onClose={closeAllPopups}
             closeByOverlay={closeByOverlay}
           >
-            <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+            <EditAvatarPopup 
+            isOpen={isEditAvatarPopupOpen} 
+            onClose={closeAllPopups} 
+            onUpdateAvatar={handleUpdateAvatar} />
           </Popup>
           <Popup
             name="submit"
             onClose={closeAllPopups}
             closeByOverlay={closeByOverlay}
+            isOpen={isDeletingPopupOpen}
           >
-            <PopupWithForm
-              title="Вы уверены?"
-              name="submit"
-              onClose={closeAllPopups}
+            <SubmitDeletingCard 
+            onClose={closeAllPopups}
+            onOpenDeleting={openDeletingPopup}
+            onCardDelete={handleDeleting}
+            isDeletedCardLoading={isDeletedCardLoading}
             />
           </Popup>
           <Popup
@@ -184,7 +205,9 @@ function App() {
             onClose={closeAllPopups}
             closeByOverlay={closeByOverlay}
           >
-            <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+            <ImagePopup 
+            card={selectedCard} 
+            onClose={closeAllPopups} />
           </Popup>
         </div>
       </div>

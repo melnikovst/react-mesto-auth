@@ -2,7 +2,7 @@ const hidden = {
   display: 'none'
 }
 
-const Card = ({ card, onCardClick, user, onCardLike, onCardDelete }) => {
+const Card = ({ card, onCardClick, user, onCardLike, onCardDelete, openDeletingPopup }) => {
 
   const isOwn = card.owner._id !== user._id;
   
@@ -18,13 +18,11 @@ const Card = ({ card, onCardClick, user, onCardLike, onCardDelete }) => {
     onCardLike(card);
   }
 
-  const handleDeleteClick = () => {
-    onCardDelete(card);
-  }
-
   return (
     <article className="card">
-      <button className="card__delete-button" style={isOwn ? hidden : null} onClick={handleDeleteClick} ></button>
+      <button className="card__delete-button" style={isOwn ? hidden : null} onClick={() => {
+        openDeletingPopup(card)
+        }} />
       <img src={card.link} alt="Изображение в карточке" className="card__image" onClick={handleClick} />
       <div className="card__title-wrapper">
         <h2 className="card__title">{card.name}</h2>

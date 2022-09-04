@@ -37,6 +37,7 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
             isOpen={isOpen}
             onClose={onClose}
             onSubmit={handleSubmit}
+            btnText="Изменить"
         >
             <fieldset className="form__fieldset">
                 <input

@@ -37,6 +37,7 @@ const AddPlacePopup = ({ isOpen, onClose, onUpdatePlace }) => {
             isOpen={isOpen}
             onClose={onClose}
             onSubmit={handleSubmit}
+            btnText="Создать"
         >
             <fieldset className="form__fieldset">
                 <input

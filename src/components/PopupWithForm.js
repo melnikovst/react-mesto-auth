@@ -1,4 +1,4 @@
-const PopupWithForm = ({ title, children, onClose, onSubmit }) => {
+const PopupWithForm = ({ title, children, onClose, onSubmit, btnText }) => {
   return (
     <div className="popup__container">
       <button
@@ -16,7 +16,7 @@ const PopupWithForm = ({ title, children, onClose, onSubmit }) => {
           aria-label="Создать"
           className="form__button"
         >
-          Создать
+          {btnText}
         </button>
       </form>
     </div>

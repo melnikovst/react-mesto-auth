@@ -11,6 +11,9 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
     onUpdateAvatar({
       avatar: avatarObj.value
     })
+    setTimeout(() => {
+      avatarObj.value = '';
+    }, 1000)
   }
   
   return (
@@ -20,6 +23,7 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit}
+      btnText="Обновить"
     >
       <fieldset className="form__fieldset">
         <input
