@@ -1,6 +1,6 @@
 import PopupWithForm from "./PopupWithForm";
 
-const SubmitDeletingCard = ({ isOpen, onClose, onCardDelete, isDeletedCardLoading }) => {
+const SubmitDeletingCard = ({ isOpen, onClose, onCardDelete, isDeletedCardLoading, closeByOverlay }) => {
 
     const handleDeleteClick = (e) => {
         e.preventDefault();
@@ -14,7 +14,8 @@ const SubmitDeletingCard = ({ isOpen, onClose, onCardDelete, isDeletedCardLoadin
               onClose={onClose}
               isOpen={isOpen}
               onSubmit={handleDeleteClick}
-              btnText={`${isDeletedCardLoading ? 'Грузимся...' : 'Удалить'}`}
+              btnText={`${isDeletedCardLoading ? 'Удаляется...' : 'Удалить'}`}
+              closeByOverlay={closeByOverlay}
             />
     )
 } 

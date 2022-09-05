@@ -2,7 +2,7 @@ import PopupWithForm from "./PopupWithForm";
 import { useRef } from "react";
 
 
-const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
+const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar, closeByOverlay }) => {
   const inputRef = useRef();
   const avatarObj = inputRef.current;
 
@@ -24,6 +24,7 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar }) => {
       onClose={onClose}
       onSubmit={handleSubmit}
       btnText="Обновить"
+      closeByOverlay={closeByOverlay}
     >
       <fieldset className="form__fieldset">
         <input

@@ -23,7 +23,7 @@ const Card = ({ card, onCardClick, user, onCardLike, onCardDelete, openDeletingP
       <button className="card__delete-button" style={isOwn ? hidden : null} onClick={() => {
         openDeletingPopup(card)
         }} />
-      <img src={card.link} alt="Изображение в карточке" className="card__image" onClick={handleClick} />
+      <img src={card.link} alt={card.name} className="card__image" onClick={handleClick} />
       <div className="card__title-wrapper">
         <h2 className="card__title">{card.name}</h2>
         <div className="card__likes_container_wrapper">

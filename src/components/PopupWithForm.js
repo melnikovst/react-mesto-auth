@@ -1,5 +1,8 @@
-const PopupWithForm = ({ title, children, onClose, onSubmit, btnText }) => {
+import Popup from "./Popup";
+
+const PopupWithForm = ({ title, children, onClose, onSubmit, btnText, name, isOpen, closeByOverlay }) => {
   return (
+    <Popup name={name} onClose={onClose} isOpen={isOpen} closeByOverlay={closeByOverlay} >
     <div className="popup__container">
       <button
         onClick={onClose}
@@ -20,6 +23,7 @@ const PopupWithForm = ({ title, children, onClose, onSubmit, btnText }) => {
         </button>
       </form>
     </div>
+    </Popup>
   );
 };
 

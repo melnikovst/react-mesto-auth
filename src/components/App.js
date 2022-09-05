@@ -24,22 +24,28 @@ function App() {
   const [isDeletingPopupOpen, setIsDeletingPopupOpen] = useState(false);
   const [cardDel, setCard] = useState({});
   const [isDeletedCardLoading, setIsDeletedCardLoading] = useState(false);
-
+  const [isAddingLoading, setIsAddingLoading] = useState(false);
   const { _id } = currentUser;
 
   const openDeletingPopup = (card) => {
     setIsDeletingPopupOpen(true);
     setCard(card);
   }
-
+  
   const handleAddPlaceSubmit = async (obj) => {
+    setIsAddingLoading(true)
     try {
       const resAdding = await server.addCard(obj);
       setCards([resAdding, ...cards])
+      closeAllPopups()
+      setTimeout(() => {
+        setIsAddingLoading(false)
+      }, 500)
     } catch (error) {
       console.log(error);
     }
   }
+
 
   const handleCardLike = async (card) => {
     const isLiked = card.likes.some(i => i._id === _id);
@@ -50,8 +56,6 @@ function App() {
       console.log(error);
     }
   }
-
-  console.log(cardDel);
 
   const handleDeleting = async () => {
     setIsDeletedCardLoading(true);
@@ -154,51 +158,31 @@ function App() {
             openDeletingPopup={openDeletingPopup}
           />
           <Footer />
-          <Popup
-            name="profile-info"
-            isOpen={isEditProfilePopupOpen}
-            onClose={closeAllPopups}
-            closeByOverlay={closeByOverlay}
-          >
-            <EditProfilePopup isOpen={isEditProfilePopupOpen} 
+            <EditProfilePopup 
+            isOpen={isEditProfilePopupOpen} 
             onClose={closeAllPopups} 
-            onUpdateUser={handleUpdateUser} />
-          </Popup>
-          <Popup
-            name="card-add"
-            isOpen={isAddPlacePopupOpen}
-            onClose={closeAllPopups}
-            closeByOverlay={closeByOverlay}
-          >
+            onUpdateUser={handleUpdateUser}
+            closeByOverlay={closeByOverlay} />
             <AddPlacePopup 
             isOpen={isAddPlacePopupOpen} 
             onClose={closeAllPopups} 
-            onUpdatePlace={handleAddPlaceSubmit} />
-          </Popup>
-          <Popup
-            name="avatar"
-            isOpen={isEditAvatarPopupOpen}
-            onClose={closeAllPopups}
+            onUpdatePlace={handleAddPlaceSubmit}
+            isAddingLoading={isAddingLoading}
             closeByOverlay={closeByOverlay}
-          >
+            />
             <EditAvatarPopup 
             isOpen={isEditAvatarPopupOpen} 
             onClose={closeAllPopups} 
-            onUpdateAvatar={handleUpdateAvatar} />
-          </Popup>
-          <Popup
-            name="submit"
-            onClose={closeAllPopups}
-            closeByOverlay={closeByOverlay}
-            isOpen={isDeletingPopupOpen}
-          >
+            onUpdateAvatar={handleUpdateAvatar}
+            closeByOverlay={closeByOverlay} />
             <SubmitDeletingCard 
             onClose={closeAllPopups}
             onOpenDeleting={openDeletingPopup}
             onCardDelete={handleDeleting}
             isDeletedCardLoading={isDeletedCardLoading}
+            closeByOverlay={closeByOverlay}
+            isOpen={isDeletingPopupOpen}
             />
-          </Popup>
           <Popup
             name="picture"
             isOpen={isImageOpen}

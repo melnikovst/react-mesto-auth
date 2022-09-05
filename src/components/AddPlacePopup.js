@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import PopupWithForm from "./PopupWithForm";
 
-const AddPlacePopup = ({ isOpen, onClose, onUpdatePlace }) => {
+const AddPlacePopup = ({ isOpen, onClose, onUpdatePlace, isAddingLoading, closeByOverlay }) => {
     const [cardName, setCardName] = useState('');
     const [cardPath, setCardPath] = useState('');
+
     const card = {
         title: cardName,
         link: cardPath,
@@ -20,9 +21,6 @@ const AddPlacePopup = ({ isOpen, onClose, onUpdatePlace }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         onUpdatePlace(card)
-        setTimeout(() => {
-            onClose()
-        }, 500);
     }
 
     useEffect(() => {
@@ -37,7 +35,8 @@ const AddPlacePopup = ({ isOpen, onClose, onUpdatePlace }) => {
             isOpen={isOpen}
             onClose={onClose}
             onSubmit={handleSubmit}
-            btnText="Создать"
+            btnText={`${isAddingLoading ? 'Грузится...' : 'Создать'}`}
+            closeByOverlay={closeByOverlay}
         >
             <fieldset className="form__fieldset">
                 <input

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react"
 import CurrentUserContext from "../contexts/CurrentUserContext"
 import PopupWithForm from "./PopupWithForm"
 
-const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
+const EditProfilePopup = ({ isOpen, onClose, onUpdateUser, closeByOverlay }) => {
     const currentUser = useContext(CurrentUserContext)
     const {name, about} = currentUser;
     const [profileName, setName] = useState('');
@@ -15,7 +15,7 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
     useEffect(() => {
         setName(name)
         setDescription(about)
-    }, [currentUser])
+    }, [currentUser, isOpen])
 
     const handleNameInput = (e) => {
         setName(e.target.value);
@@ -38,6 +38,7 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
             onClose={onClose}
             onSubmit={handleSubmit}
             btnText="Изменить"
+            closeByOverlay={closeByOverlay}
         >
             <fieldset className="form__fieldset">
                 <input
@@ -50,7 +51,7 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
                     minLength="2"
                     maxLength="30"
                     onChange={handleNameInput}
-                    defaultValue={profileName}
+                    value={profileName || ''}
                 />
                 <span className="form__invalid-message title-error"></span>
                 <input
@@ -61,7 +62,7 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
                     placeholder="Ваш род деятельности"
                     required
                     onChange={handleAboutInput}
-                    defaultValue={description}
+                    value={description || ''}
                 />
                 <span className="form__invalid-message link-error"></span>
             </fieldset>
