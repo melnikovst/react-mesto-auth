@@ -62,7 +62,7 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser, closeByOverlay }) => 
                     placeholder="Ваш род деятельности"
                     required
                     onChange={handleAboutInput}
-                    value={description || ''}
+                    value={description || ''} //нагуглил такое решение, без этого в консоль падает ошибка :)
                 />
                 <span className="form__invalid-message link-error"></span>
             </fieldset>

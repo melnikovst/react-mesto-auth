@@ -4,12 +4,11 @@ import PopupWithForm from "./PopupWithForm";
 const AddPlacePopup = ({ isOpen, onClose, onUpdatePlace, isAddingLoading, closeByOverlay }) => {
     const [cardName, setCardName] = useState('');
     const [cardPath, setCardPath] = useState('');
-
     const card = {
         title: cardName,
         link: cardPath,
     }
-    console.log(cardPath);
+
     const handleCardName = (e) => {
         setCardName(e.target.value)
     }
