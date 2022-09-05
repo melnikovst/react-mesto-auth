@@ -38,11 +38,12 @@ function App() {
       const resAdding = await server.addCard(obj);
       setCards([resAdding, ...cards])
       closeAllPopups()
+    } catch (error) {
+      console.log(error);
+    } finally {
       setTimeout(() => {
         setIsAddingLoading(false)
       }, 500)
-    } catch (error) {
-      console.log(error);
     }
   }
 
@@ -63,11 +64,12 @@ function App() {
       await server.deleteCard(cardDel);
       setCards((newArray) => newArray.filter((item) => cardDel._id !== item._id))
       closeAllPopups();
+    } catch (error) {
+      console.log(error);
+    } finally {
       setTimeout(() => {
         setIsDeletedCardLoading(false);
       }, 500)
-    } catch (error) {
-      console.log(error);
     }
   }
 
