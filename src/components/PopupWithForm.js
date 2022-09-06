@@ -11,7 +11,7 @@ const PopupWithForm = ({ title, children, onClose, onSubmit, btnText, name, isOp
         className="popup__button-escape popup__button-escape_card"
       ></button>
       <h2 className="popup__title">{title}</h2>
-      <form name="card-form" className="form form_popup_template" noValidate onSubmit={onSubmit}>
+      <form name={name} className="form form_popup_template" noValidate onSubmit={onSubmit}>
         {children}
         <button
           type="submit"
