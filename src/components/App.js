@@ -12,7 +12,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [isImageOpen, setIsImageOpen] = useState(false);
-  //завёл новое состояние для поп-апа картинки, т.к. объект всегда true и проверка ломается
+
   const closeAllPopups = () => {
     setIsImageOpen(false);
     setIsEditProfilePopupOpen(false);
