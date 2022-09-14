@@ -1,5 +1,8 @@
-const PopupWithForm = ({ title, children, onClose }) => {
+import Popup from "./Popup";
+
+const PopupWithForm = ({ title, children, onClose, onSubmit, btnText, name, isOpen, closeByOverlay }) => {
   return (
+    <Popup name={name} onClose={onClose} isOpen={isOpen} closeByOverlay={closeByOverlay} >
     <div className="popup__container">
       <button
         onClick={onClose}
@@ -8,7 +11,7 @@ const PopupWithForm = ({ title, children, onClose }) => {
         className="popup__button-escape popup__button-escape_card"
       ></button>
       <h2 className="popup__title">{title}</h2>
-      <form name="card-form" className="form form_popup_template" noValidate>
+      <form name={name} className="form form_popup_template" noValidate onSubmit={onSubmit}>
         {children}
         <button
           type="submit"
@@ -16,10 +19,11 @@ const PopupWithForm = ({ title, children, onClose }) => {
           aria-label="Создать"
           className="form__button"
         >
-          Создать
+          {btnText}
         </button>
       </form>
     </div>
+    </Popup>
   );
 };
 

@@ -1,10 +1,15 @@
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import Popup from './Popup';
-import { useState } from 'react';
+import EditProfilePopup from './EditProfilePopup';
+import CurrentUserContext from '../contexts/CurrentUserContext';
+import { server } from '../utils/api';
+import { useEffect, useState } from 'react';
+import EditAvatarPopup from './EditAvatarPopup';
+import AddPlacePopup from './AddPlacePopup';
+import SubmitDeletingCard from './SubmitDeletingCard';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -12,6 +17,85 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [isImageOpen, setIsImageOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
+  const [cards, setCards] = useState([]);
+  const [isAvatarLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [isDeletingPopupOpen, setIsDeletingPopupOpen] = useState(false);
+  const [cardDel, setCard] = useState({});
+  const [isDeletedCardLoading, setIsDeletedCardLoading] = useState(false);
+  const [isAddingLoading, setIsAddingLoading] = useState(false);
+  const { _id } = currentUser;
+
+  const openDeletingPopup = (card) => {
+    setIsDeletingPopupOpen(true);
+    setCard(card);
+  };
+
+  const handleAddPlaceSubmit = async (obj) => {
+    setIsAddingLoading(true);
+    try {
+      const resAdding = await server.addCard(obj);
+      setCards([resAdding, ...cards]);
+      closeAllPopups();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setTimeout(() => {
+        setIsAddingLoading(false);
+      }, 500);
+    }
+  };
+
+  const handleCardLike = async (card) => {
+    const isLiked = card.likes.some((i) => i._id === _id);
+    try {
+      const resChangeLikeStatus = await server.changeLikeCardStatus(
+        card,
+        !isLiked
+      );
+      setCards((state) =>
+        state.map((c) => (c._id === card._id ? resChangeLikeStatus : c))
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleting = async () => {
+    setIsDeletedCardLoading(true);
+    try {
+      await server.deleteCard(cardDel);
+      setCards((newArray) =>
+        newArray.filter((item) => cardDel._id !== item._id)
+      );
+      closeAllPopups();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setTimeout(() => {
+        setIsDeletedCardLoading(false);
+      }, 500);
+    }
+  };
+
+  const fetchData = async () => {
+    try {
+      const [profileObject, cards] = await Promise.all([
+        server.loadProfile(),
+        server.loadCards(),
+      ]);
+      setCards(cards);
+      setCurrentUser(profileObject);
+    } catch (error) {
+      console.log(error);
+      setError(true);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const closeAllPopups = () => {
     setIsImageOpen(false);
@@ -19,6 +103,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setSelectedCard({});
+    setIsDeletingPopupOpen(false);
   };
 
   const handleCardClick = (object) => {
@@ -44,136 +129,84 @@ function App() {
     }
   };
 
+  const handleUpdateUser = async (object) => {
+    try {
+      const resChangingProfile = await server.changeProfile(object);
+      setCurrentUser(resChangingProfile);
+      closeAllPopups();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUpdateAvatar = async (object) => {
+    setIsLoading(true);
+    try {
+      const resAvatar = await server.setNewAvatar(object);
+      setCurrentUser(resAvatar);
+      closeAllPopups();
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <div className="App">
-      <div className="page">
-        <Header />
-        <Main
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onEditAvatar={handleEditAvatarClick}
-          onCardClick={handleCardClick}
-        />
-        <Footer />
-        <Popup
-          name="profile-info"
-          isOpen={isEditProfilePopupOpen}
-          onClose={closeAllPopups}
-          closeByOverlay={closeByOverlay}
-        >
-          <PopupWithForm
-            title="Редактировать профиль"
-            name="profile-info"
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="App">
+        <div className="page">
+          <Header />
+          <Main
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}
+            onEditAvatar={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+            cards={cards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleDeleting}
+            isLoading={isAvatarLoading}
+            error={error}
+            openDeletingPopup={openDeletingPopup}
+          />
+          <Footer />
+          <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
-          >
-            <fieldset className="form__fieldset">
-              <input
-                type="text"
-                className="form__input form__input_type-name"
-                name="form-name"
-                id="title"
-                placeholder="Название"
-                required
-                minLength="2"
-                maxLength="30"
-              />
-              <span className="form__invalid-message title-error"></span>
-              <input
-                type="url"
-                className="form__input form__input_type-link"
-                name="form-job"
-                id="link"
-                placeholder="Ссылка на картинку"
-                required
-              />
-              <span className="form__invalid-message link-error"></span>
-            </fieldset>
-          </PopupWithForm>
-        </Popup>
-        <Popup
-          name="card-add"
-          isOpen={isAddPlacePopupOpen}
-          onClose={closeAllPopups}
-          closeByOverlay={closeByOverlay}
-        >
-          <PopupWithForm
-            title="Новое место"
-            name="card-add"
+            onUpdateUser={handleUpdateUser}
+            closeByOverlay={closeByOverlay}
+          />
+          <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
-          >
-            <fieldset className="form__fieldset">
-              <input
-                type="text"
-                className="form__input form__input_type-name"
-                name="form-name"
-                id="title"
-                placeholder="Название"
-                required
-                minLength="2"
-                maxLength="30"
-              />
-              <span className="form__invalid-message title-error"></span>
-              <input
-                type="url"
-                className="form__input form__input_type-link"
-                name="form-job"
-                id="link"
-                placeholder="Ссылка на картинку"
-                required
-              />
-              <span className="form__invalid-message link-error"></span>
-            </fieldset>
-          </PopupWithForm>
-        </Popup>
-        <Popup
-          name="avatar"
-          isOpen={isEditAvatarPopupOpen}
-          onClose={closeAllPopups}
-          closeByOverlay={closeByOverlay}
-        >
-          <PopupWithForm
-            title="Обновить аватар"
-            name="avatar"
+            onUpdatePlace={handleAddPlaceSubmit}
+            isAddingLoading={isAddingLoading}
+            closeByOverlay={closeByOverlay}
+          />
+          <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
-          >
-            <fieldset className="form__fieldset">
-              <input
-                type="url"
-                className="form__input form__input_type-name"
-                name="form-name"
-                id="avatar"
-                placeholder="Ссылка на картинку"
-                required
-                minLength="2"
-              />
-              <span className="form__invalid-message avatar-error"></span>
-            </fieldset>
-          </PopupWithForm>
-        </Popup>
-        <Popup
-          name="submit"
-          onClose={closeAllPopups}
-          closeByOverlay={closeByOverlay}
-        >
-          <PopupWithForm
-            title="Вы уверены?"
-            name="submit"
-            onClose={closeAllPopups}
+            onUpdateAvatar={handleUpdateAvatar}
+            closeByOverlay={closeByOverlay}
           />
-        </Popup>
-        <Popup
-          name="picture"
-          isOpen={isImageOpen}
-          onClose={closeAllPopups}
-          closeByOverlay={closeByOverlay}
-        >
-          <ImagePopup card={selectedCard} onClose={closeAllPopups} />
-        </Popup>
+          <SubmitDeletingCard
+            onClose={closeAllPopups}
+            onOpenDeleting={openDeletingPopup}
+            onCardDelete={handleDeleting}
+            isDeletedCardLoading={isDeletedCardLoading}
+            closeByOverlay={closeByOverlay}
+            isOpen={isDeletingPopupOpen}
+          />
+          <Popup
+            name="picture"
+            isOpen={isImageOpen}
+            onClose={closeAllPopups}
+            closeByOverlay={closeByOverlay}
+          >
+            <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+          </Popup>
+        </div>
       </div>
-    </div>
+    </CurrentUserContext.Provider>
   );
 }
 

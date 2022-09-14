@@ -1,44 +1,24 @@
 import updateProfileInfoBtn from '../images/Vector.svg';
 import addCardBtn from '../images/Vector2.svg';
 import Card from './Card';
-import Error from './Error';
+import { useContext } from 'react';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 import Loader from './Loader';
-import { server } from '../utils/api';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import Error from './Error'
 
-const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) => {
-  const [userName, setUserName] = useState('');
-  const [userDesciption, setUserDescription] = useState('');
-  const [userAvatar, setUserAvatar] = useState('');
-  const [error, setError] = useState(false); //обрабатываю ошибку в промисах, если true - запускается анимация сообщения об ошибке
-  const [cards, setCards] = useState([]);
+const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick, cards, onCardLike, onCardDelete, isLoading, error, openDeletingPopup }) => {
+  const profileContext = useContext(CurrentUserContext);
+  const { avatar, name, about } = profileContext;
+  const avatarClasses = `spinner ${isLoading ? "spinner_visible" : ""}`
+  const profileImgClasses = `profile__image ${isLoading ? "profile__image_while_loading" : ""}`;
+  console.log(name);
 
-  const fetchData = async () => {
-    try {
-      const resProfileInfo = await server.loadProfile();
-      const resLoadCards = await server.loadCards();
-      setUserAvatar(resProfileInfo.avatar);
-      setUserDescription(resProfileInfo.about);
-      setUserName(resProfileInfo.name);
-      setCards(resLoadCards);
-    } catch (error) {
-      setError(true);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  // сделал 2 дополнительных компонента для лоадера/ошибки, чтобы не перегружать разметкой, плохо читается
-  // разметка в Error.js, Loader.js
   if (error) {
-    return <Error />;
+    return <Error />
   }
 
-  if ((userAvatar.length || userDesciption.length || userName.length) === 0) {
-    return <Loader />;
+  if ((avatar === undefined)) {
+    return <Loader />
   }
 
   return (
@@ -46,17 +26,17 @@ const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) => {
       <section className="profile">
         <div className="profile__wrapper">
           <div onClick={onEditAvatar} className="profile__avatar-container">
-            <div className="spinner"></div>
+            <div className={avatarClasses}></div>
             <img
-              src={userAvatar}
+              src={avatar}
               alt="Что-то пошло не так :("
-              className="profile__image"
+              className={profileImgClasses}
             />
             <div className="profile__substrate"></div>
           </div>
           <div className="profile__text-wrapper">
             <div className="profile__title-container">
-              <h1 className="profile__title">{userName}</h1>
+              <h1 className="profile__title">{name}</h1>
               <button
                 type="button"
                 aria-label="Редактировать профиль"
@@ -70,7 +50,7 @@ const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) => {
                 />
               </button>
             </div>
-            <p className="profile__subtitle">{userDesciption}</p>
+            <p className="profile__subtitle">{about}</p>
           </div>
           <button
             type="button"
@@ -88,7 +68,15 @@ const Main = ({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) => {
       </section>
       <section className="cards">
         {cards.map((card) => {
-          return <Card onCardClick={onCardClick} key={card._id} card={card} />;
+          return <Card 
+          onCardClick={onCardClick} 
+          key={card._id} 
+          card={card} 
+          user={profileContext} 
+          onCardLike={onCardLike} 
+          onCardDelete={onCardDelete} 
+          openDeletingPopup={openDeletingPopup} 
+          />;
         })}
       </section>
     </main>
