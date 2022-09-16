@@ -10,6 +10,11 @@ import { useEffect, useState } from 'react';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import SubmitDeletingCard from './SubmitDeletingCard';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import Home from '../pages/Home';
+import Login from '../pages/Login';
+import ProtectedRoute from './ProtectedRoute';
+import * as login from '../utils/register.js';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -26,6 +31,9 @@ function App() {
   const [isDeletedCardLoading, setIsDeletedCardLoading] = useState(false);
   const [isAddingLoading, setIsAddingLoading] = useState(false);
   const { _id } = currentUser;
+
+  // АВТОРИЗАЦИЯ
+  const [isLogged, setIsLogged] = useState(false);
 
   const openDeletingPopup = (card) => {
     setIsDeletingPopupOpen(true);
@@ -80,22 +88,21 @@ function App() {
   };
 
   const fetchData = async () => {
-    try {
+    if (isLogged) {
       const [profileObject, cards] = await Promise.all([
         server.loadProfile(),
         server.loadCards(),
       ]);
       setCards(cards);
       setCurrentUser(profileObject);
-    } catch (error) {
-      console.log(error);
-      setError(true);
     }
   };
 
+  console.log(isLogged);
+
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [isLogged]);
 
   const closeAllPopups = () => {
     setIsImageOpen(false);
@@ -150,24 +157,101 @@ function App() {
       console.log(error);
     }
   };
+  const history = useNavigate();
+  const goForward = () => history('/');
+  const goOut = () => history('/sign-in');
+
+  const [profileP, setProfileP] = useState('');
+
+  const checkToken = async () => {
+    const token = localStorage.getItem('token');
+    console.log(token);
+    if (token) {
+      try {
+        const res = await login.goMain(token);
+        if (res.data) {
+          setProfileP(res.data.email);
+          setIsLogged(true);
+          goForward();
+        }
+        console.log(res.data);
+      } catch (error) {
+        console.log(error);
+        goOut();
+        setIsLogged(false);
+      }
+    }
+  };
+  console.log(profileP);
+  const handleLogin = async (email, password) => {
+    await login.login(email, password);
+    setProfileP(email);
+    setIsLogged(true);
+    goForward();
+  };
+  
+  const handleRegister = async (email, password) => {
+    await login.register(email, password);
+    setProfileP(email);
+    setIsLogged(true);
+    goForward();
+  };
+
+  useEffect(() => {
+    checkToken();
+  }, []);
+
+  const onHeaderBtnClick = () => {
+    localStorage.removeItem('token');
+    goOut();
+    setIsLogged(false);
+    setProfileP('');
+  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
         <div className="page">
-          <Header />
-          <Main
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            cards={cards}
-            onCardLike={handleCardLike}
-            onCardDelete={handleDeleting}
-            isLoading={isAvatarLoading}
-            error={error}
-            openDeletingPopup={openDeletingPopup}
+          <Header
+            email={profileP}
+            isLogged={isLogged}
+            onHeaderBtnClick={onHeaderBtnClick}
           />
+          <Routes>
+            <Route
+              path="/sign-up"
+              element={<Home handleClick={handleRegister} />}
+            />
+            <Route
+              path="/sign-in"
+              element={<Login handleClick={handleLogin} />}
+            />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute
+                  onEditProfile={handleEditProfileClick}
+                  onAddPlace={handleAddPlaceClick}
+                  onEditAvatar={handleEditAvatarClick}
+                  onCardClick={handleCardClick}
+                  cards={cards}
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleDeleting}
+                  isLoading={isAvatarLoading}
+                  error={error}
+                  openDeletingPopup={openDeletingPopup}
+                  isLogged={isLogged}
+                  Component={Main}
+                />
+              }
+            />
+            <Route
+              path="*"
+              element={
+                isLogged ? <Navigate to="/main" /> : <Navigate to="/sign-in" />
+              }
+            />
+          </Routes>
           <Footer />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}

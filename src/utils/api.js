@@ -33,7 +33,9 @@ class Api {
   }
 
   changeLikeCardStatus(obj, variable) {
-    this._status = variable ? this._handleLike('PUT', obj) : this._handleLike('DELETE', obj);
+    this._status = variable
+      ? this._handleLike('PUT', obj)
+      : this._handleLike('DELETE', obj);
     return this._status;
   }
 
@@ -57,7 +59,7 @@ class Api {
     return this._changedProfile;
   }
 
-  addCard({title, link}) {
+  addCard({ title, link }) {
     this._addedCard = fetch(`${this._url}/cards`, {
       method: 'POST',
       headers: this._headers,
