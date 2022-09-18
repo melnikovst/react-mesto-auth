@@ -22,7 +22,7 @@ const Login = ({ handleClick }) => {
     <div className="popup popup_type_auth">
       <div className="popup__container popup__container_type_auth">
         <h2 className="popup__title popup__title_type_auth">Вход</h2>
-        <form className="form form_type_auth">
+        <form className="form">
           <input
             type="email"
             id="email"
