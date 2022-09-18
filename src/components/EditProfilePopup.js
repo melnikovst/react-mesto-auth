@@ -5,7 +5,7 @@ import useFormAndValidation from '../utils/useValidation'
 
 const EditProfilePopup = ({ isOpen, onClose, onUpdateUser, closeByOverlay }) => {
     const currentUser = useContext(CurrentUserContext)
-    const {values, handleChange, errors, isValid, setValues, resetForm} = useFormAndValidation(currentUser)
+    const {values, handleChange, errors, isValid, setValues, resetForm, handleBlur} = useFormAndValidation(currentUser)
     
     useEffect(() => {
         setValues(currentUser)
@@ -17,6 +17,11 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser, closeByOverlay }) => 
     const handleSubmit = (e) => {
         e.preventDefault();
         onUpdateUser(values)
+    }
+
+    const handleValidation = (e) => {
+        handleChange(e);
+        handleBlur(e);  
     }
 
     return (
@@ -40,7 +45,7 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser, closeByOverlay }) => 
                     required
                     minLength="2"
                     maxLength="30"
-                    onChange={handleChange}
+                    onChange={handleValidation}
                     value={values.name || ''}
                 />
                 <span className={`form__invalid-message name-error ${isValid ? '' : 'form__invalid-message_active'}`}>{errors.name}</span>
@@ -52,7 +57,7 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser, closeByOverlay }) => 
                     placeholder="Ваш род деятельности"
                     minLength="2"
                     required
-                    onChange={handleChange}
+                    onChange={handleValidation}
                     value={values.about || ''} //нагуглил такое решение, без этого в консоль падает ошибка :)
                 />
                 <span className={`form__invalid-message about-error ${isValid ? '' : 'form__invalid-message_active'}`}>{errors.about}</span>

@@ -7,7 +7,7 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar, closeByOverlay }) =>
     avatar: ''
   }
 
-  const {values, handleChange, errors, isValid, setValues, resetForm} = useFormAndValidation(obj)
+  const {values, handleChange, errors, isValid, setValues, resetForm, handleBlur} = useFormAndValidation(obj)
 
   useEffect(() => {
     setValues(obj)
@@ -15,6 +15,11 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar, closeByOverlay }) =>
       setTimeout(resetForm, 500)
     }
   }, [isOpen])
+
+  const handleValidation = (e) => {
+    handleChange(e);
+    handleBlur(e);  
+}
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -42,7 +47,7 @@ const EditAvatarPopup = ({ isOpen, onClose, onUpdateAvatar, closeByOverlay }) =>
           placeholder="Ссылка на картинку"
           required
           minLength="2"
-          onChange={handleChange}
+          onChange={handleValidation}
           value={values.avatar || ''}
         />
         <span className={`form__invalid-message avatar-error ${isValid ? '' : 'form__invalid-message_active'}`}>{errors.avatar}</span>

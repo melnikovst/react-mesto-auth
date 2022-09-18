@@ -8,7 +8,7 @@ const AddPlacePopup = ({ isOpen, onClose, onUpdatePlace, isAddingLoading, closeB
         title: '',
         link: '',
     }
-    const {values, handleChange, errors, isValid, setValues, resetForm} = useFormAndValidation(card)
+    const {values, handleChange, errors, isValid, setValues, resetForm, handleBlur} = useFormAndValidation(card)
 
 
     const handleSubmit = (e) => {
@@ -22,6 +22,11 @@ const AddPlacePopup = ({ isOpen, onClose, onUpdatePlace, isAddingLoading, closeB
             resetForm();
         }
     }, [isOpen])
+
+    const handleValidation = (e) => {
+        handleChange(e);
+        handleBlur(e);  
+    }
 
     return (
         <PopupWithForm
@@ -44,7 +49,7 @@ const AddPlacePopup = ({ isOpen, onClose, onUpdatePlace, isAddingLoading, closeB
                     required
                     minLength="2"
                     maxLength="30"
-                    onChange={handleChange}
+                    onChange={handleValidation}
                     value={values.title || ''}
                 />
                 <span className={`form__invalid-message title-error ${isValid ? '' : 'form__invalid-message_active'}`}>{errors.title}</span>
@@ -55,7 +60,7 @@ const AddPlacePopup = ({ isOpen, onClose, onUpdatePlace, isAddingLoading, closeB
                     id="link"
                     placeholder="Ссылка на картинку"
                     required
-                    onChange={handleChange}
+                    onChange={handleValidation}
                     value={values.link || ''}
                 />
                 <span className={`form__invalid-message link-error ${isValid ? '' : 'form__invalid-message_active'}`}>{errors.link}</span>
