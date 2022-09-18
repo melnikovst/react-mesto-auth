@@ -182,11 +182,21 @@ function App() {
 
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [isOk, setIsOk] = useState(true);
+  const [span, setSpan] = useState(false);
+
   const handleLogin = async (email, password) => {
-    await login(email, password);
-    setProfileP(email);
-    setIsLogged(true);
-    goForward();
+    try {
+      await login(email, password);
+      setProfileP(email);
+      setIsLogged(true);
+      setSpan(false)
+      goForward();
+    } catch (error) {
+      console.log(error);
+      setSpan(true);
+    } finally {
+      setTimeout(() => setSpan(false), 10000)
+    }
   };
   
   const handleRegister = async (email, password) => {
@@ -245,7 +255,7 @@ function App() {
             />
             <Route
               path="/sign-in"
-              element={<Login handleClick={handleLogin} />}
+              element={<Login handleClick={handleLogin} span={span} />}
             />
             <Route
               path="/"

@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import useFormAndValidation from '../utils/useValidation'
 
-const Login = ({ handleClick }) => {
+const Login = ({ handleClick, span }) => {
   const onLogin = {
     email: '',
     password: '',
   }
 
-  const {values, handleChange, errors, isValid, setValues, resetForm} = useFormAndValidation(onLogin)
+  const {values, handleChange, errors, isValid, setValues} = useFormAndValidation(onLogin)
 
   useEffect(() => {
     setValues(onLogin)
@@ -43,6 +43,7 @@ const Login = ({ handleClick }) => {
             value={values.password || ''}
           />
           <span className={`form__invalid-message password-error ${isValid ? '' : 'form__invalid-message_active'}`}>{errors.password}</span>
+          <span className={`resolve ${span ? 'resolve_active' : ''}`}>Что-то пошло не так, проверьте правильность введённых данных!</span>
           <button className="form__button form__button_type_auth" onClick={handleSubmit}>
             Войти
           </button>
