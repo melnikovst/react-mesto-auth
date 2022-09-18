@@ -20,6 +20,9 @@ import InfoPopup from './InfoPopup';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [isOk, setIsOk] = useState(true);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
@@ -180,23 +183,17 @@ function App() {
     }
   };
 
-  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
-  const [isOk, setIsOk] = useState(true);
-  const [span, setSpan] = useState(false);
-
   const handleLogin = async (email, password) => {
     try {
       await login(email, password);
       setProfileP(email);
       setIsLogged(true);
-      setSpan(false)
       goForward();
     } catch (error) {
       console.log(error);
-      setSpan(true);
-    } finally {
-      setTimeout(() => setSpan(false), 10000)
-    }
+      setIsTooltipOpen(true)
+      setIsOk(false);
+    } 
   };
   
   const handleRegister = async (email, password) => {
@@ -218,6 +215,12 @@ function App() {
     checkToken();
   }, [])
 
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      goForward();
+    }
+  }, [])
+
   const onHeaderBtnClick = () => {
     if (pathname === '/') {
       localStorage.removeItem('token');
@@ -228,8 +231,6 @@ function App() {
     }
     return
   };
-
-  const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -255,7 +256,7 @@ function App() {
             />
             <Route
               path="/sign-in"
-              element={<Login handleClick={handleLogin} span={span} />}
+              element={<Login handleClick={handleLogin} />}
             />
             <Route
               path="/"
@@ -278,7 +279,7 @@ function App() {
             <Route
               path="*"
               element={
-                isLogged ? <Navigate to="/main" /> : <Navigate to="/sign-in" />
+                isLogged ? <Navigate to="/" /> : <Navigate to="/sign-in" />
               }
             />
           </Routes>
@@ -288,6 +289,8 @@ function App() {
           onClose={closeAllPopups} 
           closeByOverlay={closeByOverlay}
           isOk={isOk}
+          successText="Вы успешно зарегестрировались" 
+          failedText="Что-то пошло не так! Попробуйте ещё раз."
           />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}

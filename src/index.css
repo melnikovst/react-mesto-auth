@@ -11,7 +11,7 @@ body {
 
 @import url(./vendor/normalize.css);
 
-@import url(./fonts/Inter.css);
+@import url(./vendor/fonts/Inter.css);
 
 /* ROOT */
 
@@ -128,7 +128,3 @@ body {
 @import url(./blocks/burger/__line/_num/_active/burger__line_num_one_active.css);
 @import url(./blocks/burger/__line/_num/_active/burger__line_num_two_active.css);
 @import url(./blocks/burger/__line/_num/_active/burger__line_num_three_active.css);
-
-
-/* HANDLE LOGIN RESOLVE */
-@import url(./blocks/resolve/resolve.css);
