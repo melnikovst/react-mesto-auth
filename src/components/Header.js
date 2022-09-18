@@ -8,10 +8,10 @@ const Header = ({ email, pathname, setIsInfoPopupOpen, isInfoPopupOpen, onHeader
         <div className='header__login-container'>
           <p className={`header__email ${pathname !== '/' ? 'header__button_opened' : ''}`}>{email}</p>
           <Routes>
-            <Route path='/react-mesto-auth/sign-up' element={<Link to='/react-mesto-auth/sign-in' className={`header__button ${pathname !== '/' ? 'header__button_opened' : ''}`} onClick={onHeaderBtnClick}>
+            <Route path='/sign-up' element={<Link to='/sign-in' className={`header__button ${pathname !== '/' ? 'header__button_opened' : ''}`} onClick={onHeaderBtnClick}>
           Войти
           </Link>} />
-            <Route path='/react-mesto-auth/sign-in' element={<Link to='/react-mesto-auth/sign-up' className={`header__button ${pathname !== '/' ? 'header__button_opened' : ''}`} onClick={onHeaderBtnClick}>
+            <Route path='/sign-in' element={<Link to='/sign-up' className={`header__button ${pathname !== '/' ? 'header__button_opened' : ''}`} onClick={onHeaderBtnClick}>
           Регистрация
           </Link>} />
             <Route path='/' element={<Link to='/sign-in' className={`header__button ${pathname !== '/' ? 'header__button_opened' : ''}`} onClick={onHeaderBtnClick}>

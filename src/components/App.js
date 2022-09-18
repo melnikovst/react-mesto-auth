@@ -240,11 +240,11 @@ function App() {
           />
           <Routes>
             <Route
-              path="/react-mesto-auth/sign-up"
+              path="/sign-up"
               element={<Register handleClick={handleRegister} />}
             />
             <Route
-              path="/react-mesto-auth/sign-in"
+              path="/sign-in"
               element={<Login handleClick={handleLogin} />}
             />
             <Route
@@ -268,7 +268,7 @@ function App() {
             <Route
               path="*"
               element={
-                isLogged ? <Navigate to="/react-mesto-auth/main" /> : <Navigate to="/react-mesto-auth/sign-in" />
+                isLogged ? <Navigate to="/main" /> : <Navigate to="/sign-in" />
               }
             />
           </Routes>
