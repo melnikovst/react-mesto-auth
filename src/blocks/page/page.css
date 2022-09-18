@@ -1,7 +1,11 @@
 .page {
     min-width: 320px;
     margin: 0 auto;
-    position: relative;
+    position: relative;   
+}
+
+input:focus {
+    outline: none;
 }
 
 @media screen and (min-width: 321px) {

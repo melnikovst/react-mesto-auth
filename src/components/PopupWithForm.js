@@ -1,6 +1,6 @@
 import Popup from "./Popup";
 
-const PopupWithForm = ({ title, children, onClose, onSubmit, btnText, name, isOpen, closeByOverlay }) => {
+const PopupWithForm = ({ title, children, onClose, onSubmit, btnText, name, isOpen, closeByOverlay, isValid }) => {
   return (
     <Popup name={name} onClose={onClose} isOpen={isOpen} closeByOverlay={closeByOverlay} >
     <div className="popup__container">
@@ -17,7 +17,7 @@ const PopupWithForm = ({ title, children, onClose, onSubmit, btnText, name, isOp
           type="submit"
           id="card-button"
           aria-label="Создать"
-          className="form__button"
+          className={`form__button ${isValid === undefined || isValid ? '' : 'form__button_disabled'}`}
         >
           {btnText}
         </button>

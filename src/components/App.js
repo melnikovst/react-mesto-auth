@@ -10,11 +10,13 @@ import { useEffect, useState } from 'react';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import SubmitDeletingCard from './SubmitDeletingCard';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import Home from '../pages/Home';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import Register from '../pages/Register';
 import Login from '../pages/Login';
 import ProtectedRoute from './ProtectedRoute';
-import * as login from '../utils/register.js';
+import { login, register, goMain } from '../utils/register.js';
+import InfoTooltip from './InfoTooltip';
+import InfoPopup from './InfoPopup';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -25,15 +27,18 @@ function App() {
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const [isAvatarLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(false);
   const [isDeletingPopupOpen, setIsDeletingPopupOpen] = useState(false);
   const [cardDel, setCard] = useState({});
   const [isDeletedCardLoading, setIsDeletedCardLoading] = useState(false);
   const [isAddingLoading, setIsAddingLoading] = useState(false);
   const { _id } = currentUser;
-
-  // АВТОРИЗАЦИЯ
+  const {pathname} = useLocation();
+  const [headerBtn, setHeaderBtn] = useState('');
   const [isLogged, setIsLogged] = useState(false);
+  const history = useNavigate();
+  const goForward = () => history('/');
+  const goOut = () => history('/sign-in');
+  const [profileP, setProfileP] = useState('');
 
   const openDeletingPopup = (card) => {
     setIsDeletingPopupOpen(true);
@@ -98,8 +103,6 @@ function App() {
     }
   };
 
-  console.log(isLogged);
-
   useEffect(() => {
     fetchData();
   }, [isLogged]);
@@ -111,6 +114,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setSelectedCard({});
     setIsDeletingPopupOpen(false);
+    setIsTooltipOpen(false)
   };
 
   const handleCardClick = (object) => {
@@ -157,24 +161,17 @@ function App() {
       console.log(error);
     }
   };
-  const history = useNavigate();
-  const goForward = () => history('/');
-  const goOut = () => history('/sign-in');
-
-  const [profileP, setProfileP] = useState('');
 
   const checkToken = async () => {
     const token = localStorage.getItem('token');
-    console.log(token);
     if (token) {
       try {
-        const res = await login.goMain(token);
+        const res = await goMain(token);
         if (res.data) {
           setProfileP(res.data.email);
           setIsLogged(true);
           goForward();
         }
-        console.log(res.data);
       } catch (error) {
         console.log(error);
         goOut();
@@ -182,45 +179,69 @@ function App() {
       }
     }
   };
-  console.log(profileP);
+
+  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [isOk, setIsOk] = useState(true);
   const handleLogin = async (email, password) => {
-    await login.login(email, password);
+    await login(email, password);
     setProfileP(email);
     setIsLogged(true);
     goForward();
   };
   
   const handleRegister = async (email, password) => {
-    await login.register(email, password);
-    setProfileP(email);
-    setIsLogged(true);
-    goForward();
+    try {
+      await register(email, password);
+      setProfileP(email);
+      setIsLogged(true);
+      goForward();
+      setIsOk(true);
+      setIsTooltipOpen(true);
+    } catch (error) {
+      console.log(error);
+      setIsTooltipOpen(true);
+      setIsOk(false);
+    }
   };
 
   useEffect(() => {
     checkToken();
-  }, []);
+  }, [])
 
   const onHeaderBtnClick = () => {
-    localStorage.removeItem('token');
-    goOut();
-    setIsLogged(false);
-    setProfileP('');
+    if (pathname === '/') {
+      localStorage.removeItem('token');
+      goOut();
+      setIsLogged(false);
+      setProfileP('');
+      setHeaderBtn('Войти')
+    }
+    return
   };
+
+  const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
         <div className="page">
+          <InfoPopup isInfoPopupOpen={isInfoPopupOpen} onHeaderBtnClick={onHeaderBtnClick} setIsInfoPopupOpen={setIsInfoPopupOpen} profileP={profileP} />
           <Header
             email={profileP}
-            isLogged={isLogged}
+            headerBtn={headerBtn}
+            setHeaderBtn={setHeaderBtn}
+            pathname={pathname}
+            goOut={goOut}
+            setProfileP={setProfileP}
+            setIsLogged={setIsLogged}
+            setIsInfoPopupOpen={setIsInfoPopupOpen}
+            isInfoPopupOpen={isInfoPopupOpen}
             onHeaderBtnClick={onHeaderBtnClick}
           />
           <Routes>
             <Route
               path="/sign-up"
-              element={<Home handleClick={handleRegister} />}
+              element={<Register handleClick={handleRegister} />}
             />
             <Route
               path="/sign-in"
@@ -238,7 +259,6 @@ function App() {
                   onCardLike={handleCardLike}
                   onCardDelete={handleDeleting}
                   isLoading={isAvatarLoading}
-                  error={error}
                   openDeletingPopup={openDeletingPopup}
                   isLogged={isLogged}
                   Component={Main}
@@ -253,6 +273,12 @@ function App() {
             />
           </Routes>
           <Footer />
+          <InfoTooltip 
+          isOpen={isTooltipOpen} 
+          onClose={closeAllPopups} 
+          closeByOverlay={closeByOverlay}
+          isOk={isOk}
+          />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}

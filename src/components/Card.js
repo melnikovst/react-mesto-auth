@@ -2,7 +2,7 @@ const hidden = {
   display: 'none'
 }
 
-const Card = ({ card, onCardClick, user, onCardLike, onCardDelete, openDeletingPopup }) => {
+const Card = ({ card, onCardClick, user, onCardLike, openDeletingPopup }) => {
 
   const isOwn = card.owner._id !== user._id;
   

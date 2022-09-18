@@ -1,33 +1,22 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
 import CurrentUserContext from "../contexts/CurrentUserContext"
 import PopupWithForm from "./PopupWithForm"
+import useFormAndValidation from '../utils/useValidation'
 
 const EditProfilePopup = ({ isOpen, onClose, onUpdateUser, closeByOverlay }) => {
     const currentUser = useContext(CurrentUserContext)
-    const {name, about} = currentUser;
-    const [profileName, setName] = useState('');
-    const [description, setDescription] = useState('');
-    const profile = {
-        name: profileName,
-        about: description,
-    }
+    const {values, handleChange, errors, isValid, setValues, resetForm} = useFormAndValidation(currentUser)
     
     useEffect(() => {
-        setName(name)
-        setDescription(about)
+        setValues(currentUser)
+        if(!isOpen) {
+           setTimeout(resetForm, 500);
+        }
     }, [currentUser, isOpen])
-
-    const handleNameInput = (e) => {
-        setName(e.target.value);
-    }
-
-    const handleAboutInput = (e) => {
-        setDescription(e.target.value);
-    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onUpdateUser(profile)
+        onUpdateUser(values)
     }
 
     return (
@@ -39,32 +28,34 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser, closeByOverlay }) => 
             onSubmit={handleSubmit}
             btnText="Изменить"
             closeByOverlay={closeByOverlay}
+            isValid={isValid}
         >
             <fieldset className="form__fieldset">
                 <input
                     type="text"
                     className="form__input form__input_type-name"
-                    name="form-name"
-                    id="title"
+                    name="name"
+                    id="name"
                     placeholder="Ваше имя"
                     required
                     minLength="2"
                     maxLength="30"
-                    onChange={handleNameInput}
-                    value={profileName || ''}
+                    onChange={handleChange}
+                    value={values.name || ''}
                 />
-                <span className="form__invalid-message title-error"></span>
+                <span className={`form__invalid-message name-error ${isValid ? '' : 'form__invalid-message_active'}`}>{errors.name}</span>
                 <input
-                    type="url"
+                    type="text"
                     className="form__input form__input_type-link"
-                    name="form-job"
-                    id="link"
+                    name="about"
+                    id="about"
                     placeholder="Ваш род деятельности"
+                    minLength="2"
                     required
-                    onChange={handleAboutInput}
-                    value={description || ''} //нагуглил такое решение, без этого в консоль падает ошибка :)
+                    onChange={handleChange}
+                    value={values.about || ''} //нагуглил такое решение, без этого в консоль падает ошибка :)
                 />
-                <span className="form__invalid-message link-error"></span>
+                <span className={`form__invalid-message about-error ${isValid ? '' : 'form__invalid-message_active'}`}>{errors.about}</span>
             </fieldset>
         </PopupWithForm>
     )

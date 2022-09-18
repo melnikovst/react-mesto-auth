@@ -1,7 +1,5 @@
-const BASE_URL = 'https://auth.nomoreparties.co';
-
 export const register = async (email, password) => {
-  const res = await fetch(`${BASE_URL}/signup`, {
+  const res = await fetch('https://auth.nomoreparties.co/signup', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -25,7 +23,6 @@ export const login = async (email, password) => {
   });
   const response = await res.json();
   if (res.ok) {
-    /* return response; */
     if (response.token) {
       localStorage.setItem('token', response.token);
     }

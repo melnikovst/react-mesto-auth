@@ -18,3 +18,24 @@
         margin: 34px 54px 37px 36px;
     }
 }
+
+.popup__title_type_tooltip {
+    white-space: break-spaces;
+    max-width: 100%;
+    margin: 32px 36px 60px 36px;
+    text-align: center;
+}
+
+.popup__container_type_tooltip {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.popup__img {
+    margin-top: 60px;
+}
+
+.popup_type_register {
+    position: relative;
+}

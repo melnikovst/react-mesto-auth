@@ -10,3 +10,7 @@
     min-height: 30px;
     transition: all linear .3s;
 }
+
+.email-error {
+    margin: 0;
+}

@@ -1,35 +1,49 @@
-import { useState } from 'react';
-import styles from './Home.module.scss';
+import { useEffect } from 'react';
+import useFormAndValidation from '../utils/useValidation'
 
 const Login = ({ handleClick }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const onLogin = {
+    email: '',
+    password: '',
+  }
+
+  const {values, handleChange, errors, isValid, setValues, resetForm} = useFormAndValidation(onLogin)
+
+  useEffect(() => {
+    setValues(onLogin)
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleClick(email, password);
+    handleClick(values.email, values.password);
   };
 
   return (
-    <div className={styles.home}>
-      <div className={styles.inner}>
-        <h2 className={styles.title}>Вход</h2>
-        <form className={styles.form}>
+    <div className="popup popup_type_auth">
+      <div className="popup__container popup__container_type_auth">
+        <h2 className="popup__title popup__title_type_auth">Вход</h2>
+        <form className="form form_type_auth">
           <input
             type="email"
-            className={styles.input}
+            id="email"
+            name="email"
+            className="form__input form__input_type_auth"
             placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
+            onChange={handleChange}
+            value={values.email || ''}
           />
+          <span className={`form__invalid-message email-error ${isValid ? '' : 'form__invalid-message_active'}`}>{errors.email}</span>
           <input
             type="password"
-            className={styles.input}
+            id='password'
+            name='password'
+            className="form__input form__input_type_auth"
             placeholder="Пароль"
-            onChange={(e) => setPassword(e.target.value)}
-            value={password}
+            onChange={handleChange}
+            value={values.password || ''}
           />
-          <button className={styles.button} onClick={handleSubmit}>
+          <span className={`form__invalid-message password-error ${isValid ? '' : 'form__invalid-message_active'}`}>{errors.password}</span>
+          <button className="form__button form__button_type_auth" onClick={handleSubmit}>
             Войти
           </button>
         </form>

@@ -1,30 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
+import useFormAndValidation from '../utils/useValidation'
+
 
 const AddPlacePopup = ({ isOpen, onClose, onUpdatePlace, isAddingLoading, closeByOverlay }) => {
-    const [cardName, setCardName] = useState('');
-    const [cardPath, setCardPath] = useState('');
     const card = {
-        title: cardName,
-        link: cardPath,
+        title: '',
+        link: '',
     }
+    const {values, handleChange, errors, isValid, setValues, resetForm} = useFormAndValidation(card)
 
-    const handleCardName = (e) => {
-        setCardName(e.target.value)
-    }
-
-    const handleCardPath = (e) => {
-        setCardPath(e.target.value)
-    }
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onUpdatePlace(card)
+        onUpdatePlace(values)
     }
 
     useEffect(() => {
-        setCardPath('');
-        setCardName('');
+        setValues(card);
+        if(!isOpen) {
+            resetForm();
+        }
     }, [isOpen])
 
     return (
@@ -36,32 +32,33 @@ const AddPlacePopup = ({ isOpen, onClose, onUpdatePlace, isAddingLoading, closeB
             onSubmit={handleSubmit}
             btnText={`${isAddingLoading ? 'Грузится...' : 'Создать'}`}
             closeByOverlay={closeByOverlay}
+            isValid={isValid}
         >
             <fieldset className="form__fieldset">
                 <input
                     type="text"
                     className="form__input form__input_type-name"
-                    name="form-name"
+                    name="title"
                     id="title"
                     placeholder="Название"
                     required
                     minLength="2"
                     maxLength="30"
-                    onChange={handleCardName}
-                    value={cardName}
+                    onChange={handleChange}
+                    value={values.title || ''}
                 />
-                <span className="form__invalid-message title-error"></span>
+                <span className={`form__invalid-message title-error ${isValid ? '' : 'form__invalid-message_active'}`}>{errors.title}</span>
                 <input
                     type="url"
                     className="form__input form__input_type-link"
-                    name="form-job"
+                    name="link"
                     id="link"
                     placeholder="Ссылка на картинку"
                     required
-                    onChange={handleCardPath}
-                    value={cardPath}
+                    onChange={handleChange}
+                    value={values.link || ''}
                 />
-                <span className="form__invalid-message link-error"></span>
+                <span className={`form__invalid-message link-error ${isValid ? '' : 'form__invalid-message_active'}`}>{errors.link}</span>
             </fieldset>
         </PopupWithForm>
     )

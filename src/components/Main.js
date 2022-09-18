@@ -5,7 +5,7 @@ import { useContext } from 'react';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import Loader from './Loader';
 import Error from './Error';
-import Footer from './Footer';
+
 const Main = ({
   onEditProfile,
   onAddPlace,
@@ -24,7 +24,6 @@ const Main = ({
   const profileImgClasses = `profile__image ${
     isLoading ? 'profile__image_while_loading' : ''
   }`;
-  console.log(name);
 
   if (error) {
     return <Error />;

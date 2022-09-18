@@ -22,6 +22,9 @@ body {
 
 @import url(./blocks/header/header.css);
 @import url(./blocks/logo/logo.css);
+@import url(./blocks/header/__login-container/header__login-container.css);
+@import url(./blocks/header/__email/header__email.css);
+@import url(./blocks/header/__button/header__button.css);
 
 /* SECTION PROFILE */
 
@@ -58,6 +61,13 @@ body {
 @import url(./blocks/footer/footer.css);
 @import url(./blocks/footer/__copyright/footer__copyright.css);
 
+/* INFO */
+
+@import url(./blocks/info/info.css);
+@import url(./blocks/info/__link/info__link.css);
+@import url(./blocks/info/__email/info__email.css);
+@import url(./blocks/info/_open/info_open.css);
+
 /* POPUP */
 
 @import url(./blocks/popup/popup.css);
@@ -68,9 +78,13 @@ body {
 @import url(./blocks/popup/__image/popup__image.css);
 @import url(./blocks/popup/__image-subtitle/popup__image-subtitle.css);
 @import url(./blocks/popup/__image_edit/popup__image_edit.css);
-@import url(./blocks/popup/_type_picture/popup_type_picture.css);
+@import url(./blocks/popup/_type/popup_type_picture.css);
 @import url(./blocks/popup/_animated/popup_animated.css);
 @import url(./blocks/popup/_opened/popup_opened.css);
+@import url(./blocks/popup/__title/_type/popup__title_type_auth.css);
+@import url(./blocks/popup/__caption/popup__caption.css);
+@import url(./blocks/popup/__container/_type/popup__container_type_auth.css);
+@import url(./blocks/popup/_type/popup_type_auth.css);
 
 /* FORM */
 
@@ -82,6 +96,8 @@ body {
 @import url(./blocks/form/__invalid-message/form__invalid-message.css);
 @import url(./blocks/form/__invalid-message/_active/form__invalid-message_active.css);
 @import url(./blocks/form/__button/_disabled/form__button_disabled.css);
+@import url(./blocks/form/__input/_type/form__input_type_auth.css);
+@import url(./blocks/form/__button/_type/form__button_type_auth.css);
 
 /* SUBSTRATE */
 
@@ -101,3 +117,14 @@ body {
 
 @import url(./blocks/spinner/spinner.css);
 @import url(./blocks/spinner/_visible/spinner_visible.css);
+
+/* BURGER */
+@import url(./blocks/burger/burger.css);
+@import url(./blocks/burger/__line/burger__line.css);
+@import url(./blocks/burger/_hidden/burger_hidden.css);
+@import url(./blocks/burger/__line/_num/burger__line_num_one.css);
+@import url(./blocks/burger/__line/_num/burger__line_num_two.css);
+@import url(./blocks/burger/__line/_num/burger__line_num_three.css);
+@import url(./blocks/burger/__line/_num/_active/burger__line_num_one_active.css);
+@import url(./blocks/burger/__line/_num/_active/burger__line_num_two_active.css);
+@import url(./blocks/burger/__line/_num/_active/burger__line_num_three_active.css);

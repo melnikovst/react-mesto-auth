@@ -1,0 +1,4 @@
+.burger__line_num_one_active {
+    rotate: 45deg;
+    transform: translateY(17px);
+}

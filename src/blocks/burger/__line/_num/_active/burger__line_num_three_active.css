@@ -1,0 +1,4 @@
+.burger__line_num_three_active {
+    rotate: -45deg;
+    transform: translateY(-18px);
+}
