@@ -5,7 +5,7 @@ interface PopupProps {
   isOpen: boolean;
   name: string;
   onClose: () => void;
-  closeByOverlay: (e: any) => void;
+  closeByOverlay: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
 
 const Popup: FC<PopupProps> = ({

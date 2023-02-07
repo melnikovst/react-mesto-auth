@@ -16,7 +16,7 @@ interface IMainProps {
   onCardLike: (i: ICardObject) => Promise<void>;
   onCardDelete: () => void;
   isLoading: boolean;
-  error: any;
+  error: boolean;
   openDeletingPopup: () => void;
 }
 

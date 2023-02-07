@@ -4,7 +4,7 @@ import fail from '../images/icon-fail.svg';
 interface InfoTooltipProps {
   isOk: boolean;
   isOpen: boolean;
-  closeByOverlay: (e: any) => void;
+  closeByOverlay: (e: React.MouseEvent<HTMLDivElement>) => void;
   onClose: () => void;
   successText: string;
   failedText: string;

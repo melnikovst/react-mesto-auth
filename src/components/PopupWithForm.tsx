@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { iDefault } from './App';
 import Popup from './Popup';
 import { ISubmitDeletingProps } from './SubmitDeletingCard';
 
@@ -6,7 +7,7 @@ interface IPopupWithFormProps extends ISubmitDeletingProps {
   title: string;
   isValid?: boolean;
   name: string;
-  onSubmit: (e: { preventDefault: () => void }) => void;
+  onSubmit: (e: iDefault) => void;
   btnText: string;
   children?: ReactNode;
   id?: string;
