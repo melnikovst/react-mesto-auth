@@ -5,8 +5,22 @@ import { useContext } from 'react';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import Loader from './Loader';
 import Error from './Error';
+import { ICardObject } from './ImagePopup';
 
-const Main = ({
+interface IMainProps {
+  onEditProfile: () => void;
+  onAddPlace: () => void;
+  onEditAvatar: () => void;
+  onCardClick: (object: ICardObject) => void;
+  cards: ICardObject[];
+  onCardLike: (i: ICardObject) => Promise<void>;
+  onCardDelete: () => void;
+  isLoading: boolean;
+  error: any;
+  openDeletingPopup: () => void;
+}
+
+const Main: React.FC<IMainProps> = ({
   onEditProfile,
   onAddPlace,
   onEditAvatar,

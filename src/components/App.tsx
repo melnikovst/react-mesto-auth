@@ -1,16 +1,22 @@
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import ImagePopup from './ImagePopup';
+import ImagePopup, { ICardObject } from './ImagePopup';
 import Popup from './Popup';
 import EditProfilePopup from './EditProfilePopup';
 import CurrentUserContext from '../contexts/CurrentUserContext';
-import { server } from '../utils/api';
-import { useEffect, useState } from 'react';
+import { server, TCard, TProfile } from '../utils/api';
+import { useCallback, useEffect, useState } from 'react';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import SubmitDeletingCard from './SubmitDeletingCard';
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from 'react-router-dom';
 import Register from '../pages/Register';
 import Login from '../pages/Login';
 import ProtectedRoute from './ProtectedRoute';
@@ -18,37 +24,52 @@ import { login, register, goMain } from '../utils/register.js';
 import InfoTooltip from './InfoTooltip';
 import InfoPopup from './InfoPopup';
 
+interface TContext {
+  _id: string;
+}
+
+export interface ievent {
+  target: { classList: { contains: (arg0: string) => boolean } };
+}
+
+export interface iDefault {
+  preventDefault: () => void;
+}
+
 function App() {
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
-  const [isInfoPopupOpen, setIsInfoPopupOpen] = useState(false);
-  const [isTooltipOpen, setIsTooltipOpen] = useState(false);
-  const [isOk, setIsOk] = useState(true);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState({});
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
+    useState<boolean>(false);
+  const [isInfoPopupOpen, setIsInfoPopupOpen] = useState<boolean>(false);
+  const [isTooltipOpen, setIsTooltipOpen] = useState<boolean>(false);
+  const [isOk, setIsOk] = useState<boolean>(true);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] =
+    useState<boolean>(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
+    useState<boolean>(false);
+  const [selectedCard, setSelectedCard] = useState({} as ICardObject);
   const [isImageOpen, setIsImageOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState({});
-  const [cards, setCards] = useState([]);
+  const [currentUser, setCurrentUser] = useState<Partial<TContext>>({});
+  const [cards, setCards] = useState<ICardObject[]>([]);
   const [isAvatarLoading, setIsLoading] = useState(false);
   const [isDeletingPopupOpen, setIsDeletingPopupOpen] = useState(false);
-  const [cardDel, setCard] = useState({});
-  const [isDeletedCardLoading, setIsDeletedCardLoading] = useState(false);
+  const [cardDel, setCard] = useState<Partial<TCard>>({});
+  const [isDeletedCardLoading, setIsDeletedCardLoading] =
+    useState<boolean>(false);
   const [isAddingLoading, setIsAddingLoading] = useState(false);
   const { _id } = currentUser;
-  const {pathname} = useLocation();
-  const [headerBtn, setHeaderBtn] = useState('');
-  const [isLogged, setIsLogged] = useState(false);
+  const { pathname } = useLocation();
+  const [isLogged, setIsLogged] = useState<boolean>(false);
   const history = useNavigate();
-  const goForward = () => history('/');
-  const goOut = () => history('/sign-in');
-  const [profileP, setProfileP] = useState('');
+  const goForward = useCallback(() => history('/'), [history]);
+  const goOut = useCallback(() => history('/sign-in'), [history]);
+  const [profileP, setProfileP] = useState<string>('');
 
-  const openDeletingPopup = (card) => {
+  const openDeletingPopup = (card: TCard): void => {
     setIsDeletingPopupOpen(true);
     setCard(card);
   };
 
-  const handleAddPlaceSubmit = async (obj) => {
+  const handleAddPlaceSubmit = async (obj: TCard): Promise<void> => {
     setIsAddingLoading(true);
     try {
       const resAdding = await server.addCard(obj);
@@ -63,8 +84,8 @@ function App() {
     }
   };
 
-  const handleCardLike = async (card) => {
-    const isLiked = card.likes.some((i) => i._id === _id);
+  const handleCardLike = async (card: TCard) => {
+    const isLiked = card.likes?.some((i) => i._id === _id);
     try {
       const resChangeLikeStatus = await server.changeLikeCardStatus(
         card,
@@ -95,18 +116,17 @@ function App() {
     }
   };
 
-  const fetchData = async () => {
-    if (isLogged) {
-      const [profileObject, cards] = await Promise.all([
-        server.loadProfile(),
-        server.loadCards(),
-      ]);
-      setCards(cards);
-      setCurrentUser(profileObject);
-    }
-  };
-
   useEffect(() => {
+    const fetchData = async () => {
+      if (isLogged) {
+        const [profileObject, cards] = await Promise.all([
+          server.loadProfile(),
+          server.loadCards(),
+        ]);
+        setCards(cards);
+        setCurrentUser(profileObject);
+      }
+    };
     fetchData();
   }, [isLogged]);
 
@@ -115,17 +135,19 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
-    setSelectedCard({});
+    setSelectedCard({
+      name: '',
+    });
     setIsDeletingPopupOpen(false);
-    setIsTooltipOpen(false)
+    setIsTooltipOpen(false);
   };
 
-  const handleCardClick = (object) => {
+  const handleCardClick = (object: ICardObject) => {
     setIsImageOpen(true);
     setSelectedCard(object);
   };
 
-  const handleEditAvatarClick = (e) => {
+  const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
   };
 
@@ -137,13 +159,13 @@ function App() {
     setIsAddPlacePopupOpen(true);
   };
 
-  const closeByOverlay = (e) => {
-    if (e.target.classList.contains('popup_opened')) {
+  const closeByOverlay = (e: any) => {
+    if (e.target!.classList.contains('popup_opened')) {
       closeAllPopups();
     }
   };
 
-  const handleUpdateUser = async (object) => {
+  const handleUpdateUser = async (object: TProfile): Promise<void> => {
     try {
       const resChangingProfile = await server.changeProfile(object);
       setCurrentUser(resChangingProfile);
@@ -153,7 +175,7 @@ function App() {
     }
   };
 
-  const handleUpdateAvatar = async (object) => {
+  const handleUpdateAvatar = async (object: TProfile) => {
     setIsLoading(true);
     try {
       const resAvatar = await server.setNewAvatar(object);
@@ -165,25 +187,10 @@ function App() {
     }
   };
 
-  const checkToken = async () => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const res = await goMain(token);
-        if (res.data) {
-          setProfileP(res.data.email);
-          setIsLogged(true);
-          goForward();
-        }
-      } catch (error) {
-        console.log(error);
-        goOut();
-        setIsLogged(false);
-      }
-    }
-  };
-
-  const handleLogin = async (email, password) => {
+  const handleLogin = async (
+    email: string,
+    password: string
+  ): Promise<void> => {
     try {
       await login(email, password);
       setProfileP(email);
@@ -191,12 +198,15 @@ function App() {
       goForward();
     } catch (error) {
       console.log(error);
-      setIsTooltipOpen(true)
+      setIsTooltipOpen(true);
       setIsOk(false);
-    } 
+    }
   };
-  
-  const handleRegister = async (email, password) => {
+
+  const handleRegister = async (
+    email: string,
+    password: string
+  ): Promise<void> => {
     try {
       await register(email, password);
       setProfileP(email);
@@ -212,39 +222,55 @@ function App() {
   };
 
   useEffect(() => {
+    const checkToken = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const res = await goMain(token);
+          if (res.data) {
+            setProfileP(res.data.email);
+            setIsLogged(true);
+            goForward();
+          }
+        } catch (error) {
+          console.log(error);
+          goOut();
+          setIsLogged(false);
+        }
+      }
+    };
     checkToken();
-  }, [])
+  }, [goForward, goOut]);
 
   useEffect(() => {
     if (localStorage.getItem('token')) {
       goForward();
     }
-  }, [])
+  }, [goForward]);
 
-  const onHeaderBtnClick = () => {
+  const onHeaderBtnClick = (): void => {
     if (pathname === '/') {
       localStorage.removeItem('token');
       goOut();
       setIsLogged(false);
       setProfileP('');
-      setHeaderBtn('Войти')
     }
-    return
+    return;
   };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
         <div className="page">
-          <InfoPopup isInfoPopupOpen={isInfoPopupOpen} onHeaderBtnClick={onHeaderBtnClick} setIsInfoPopupOpen={setIsInfoPopupOpen} profileP={profileP} />
+          <InfoPopup
+            isInfoPopupOpen={isInfoPopupOpen}
+            onHeaderBtnClick={onHeaderBtnClick}
+            setIsInfoPopupOpen={setIsInfoPopupOpen}
+            profileP={profileP}
+          />
           <Header
             email={profileP}
-            headerBtn={headerBtn}
-            setHeaderBtn={setHeaderBtn}
             pathname={pathname}
-            goOut={goOut}
-            setProfileP={setProfileP}
-            setIsLogged={setIsLogged}
             setIsInfoPopupOpen={setIsInfoPopupOpen}
             isInfoPopupOpen={isInfoPopupOpen}
             onHeaderBtnClick={onHeaderBtnClick}
@@ -284,13 +310,13 @@ function App() {
             />
           </Routes>
           <Footer />
-          <InfoTooltip 
-          isOpen={isTooltipOpen} 
-          onClose={closeAllPopups} 
-          closeByOverlay={closeByOverlay}
-          isOk={isOk}
-          successText="Вы успешно зарегестрировались" 
-          failedText="Что-то пошло не так! Попробуйте ещё раз."
+          <InfoTooltip
+            isOpen={isTooltipOpen}
+            onClose={closeAllPopups}
+            closeByOverlay={closeByOverlay}
+            isOk={isOk}
+            successText="Вы успешно зарегестрировались"
+            failedText="Что-то пошло не так! Попробуйте ещё раз."
           />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
@@ -313,7 +339,6 @@ function App() {
           />
           <SubmitDeletingCard
             onClose={closeAllPopups}
-            onOpenDeleting={openDeletingPopup}
             onCardDelete={handleDeleting}
             isDeletedCardLoading={isDeletedCardLoading}
             closeByOverlay={closeByOverlay}

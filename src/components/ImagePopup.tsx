@@ -1,4 +1,26 @@
-const ImagePopup = ({ card, onClose }) => {
+export interface IUserObject {
+  name: string;
+  about: string;
+  avatar: string;
+  _id: string;
+  cohort: string;
+}
+
+export interface ICardObject {
+  likes?: IUserObject[];
+  link?: string;
+  name: string;
+  owner?: IUserObject;
+  _id?: string;
+}
+
+interface ImagePopupProps {
+  card: ICardObject;
+  onClose: () => void;
+}
+
+const ImagePopup: React.FC<ImagePopupProps> = ({ card, onClose }) => {
+  console.log(card);
   return Object.keys(card).length !== 0 ? (
     <figure className="popup__image">
       <img
@@ -14,9 +36,6 @@ const ImagePopup = ({ card, onClose }) => {
       />
     </figure>
   ) : null;
-
-  // Добавил условный рендеринг, т.к. объект зануляется быстрее, чем происходит анимация закрытия, и видно кнопку закрытия
-  // и пустую картинку, некрасиво :)
 };
 
 export default ImagePopup;

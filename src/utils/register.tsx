@@ -1,4 +1,4 @@
-export const register = async (email, password) => {
+export const register = async (email: string, password: string) => {
   const res = await fetch('https://auth.nomoreparties.co/signup', {
     method: 'POST',
     headers: {
@@ -13,7 +13,7 @@ export const register = async (email, password) => {
   return Promise.reject(response);
 };
 
-export const login = async (email, password) => {
+export const login = async (email: string, password: string) => {
   const res = await fetch('https://auth.nomoreparties.co/signin', {
     method: 'POST',
     headers: {
@@ -31,7 +31,7 @@ export const login = async (email, password) => {
   return Promise.reject(response);
 };
 
-export const goMain = async (jwt) => {
+export const goMain = async (jwt: string) => {
   const res = await fetch('https://auth.nomoreparties.co/users/me', {
     headers: {
       'Content-Type': 'application/json',
