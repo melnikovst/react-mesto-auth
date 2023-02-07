@@ -3,12 +3,14 @@ import CurrentUserContext from '../contexts/CurrentUserContext';
 import PopupWithForm from './PopupWithForm';
 import useFormAndValidation from '../utils/useValidation';
 import { TProfile } from '../utils/api';
+import { iDefault } from './App';
 
 interface IEditProfilePopup {
   isOpen: boolean;
   onClose: () => void;
   onUpdateUser: (object: TProfile) => Promise<void>;
-  closeByOverlay: (e: any) => void;
+  closeByOverlay: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onCardDelete: (e: iDefault) => void;
 }
 
 const EditProfilePopup: React.FC<IEditProfilePopup> = ({
@@ -16,6 +18,7 @@ const EditProfilePopup: React.FC<IEditProfilePopup> = ({
   onClose,
   onUpdateUser,
   closeByOverlay,
+  onCardDelete,
 }) => {
   const currentUser = useContext(CurrentUserContext);
   const {
@@ -55,7 +58,7 @@ const EditProfilePopup: React.FC<IEditProfilePopup> = ({
       btnText="Изменить"
       closeByOverlay={closeByOverlay}
       isValid={isValid}
-      onCardDelete={undefined}
+      onCardDelete={onCardDelete}
     >
       <fieldset className="form__fieldset">
         <input

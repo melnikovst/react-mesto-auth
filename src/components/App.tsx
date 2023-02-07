@@ -28,10 +28,6 @@ interface TContext {
   _id: string;
 }
 
-export interface ievent {
-  target: { classList: { contains: (arg0: string) => boolean } };
-}
-
 export interface iDefault {
   preventDefault: () => void;
 }
@@ -99,7 +95,9 @@ function App() {
     }
   };
 
-  const handleDeleting = async () => {
+  const handleDeleting = async (e: {
+    preventDefault: () => void;
+  }): Promise<void> => {
     setIsDeletedCardLoading(true);
     try {
       await server.deleteCard(cardDel);
@@ -159,8 +157,8 @@ function App() {
     setIsAddPlacePopupOpen(true);
   };
 
-  const closeByOverlay = (e: any) => {
-    if (e.target!.classList.contains('popup_opened')) {
+  const closeByOverlay = (e: React.MouseEvent<HTMLDivElement>) => {
+    if ((e.target as HTMLDivElement).classList.contains('popup_opened')) {
       closeAllPopups();
     }
   };
@@ -323,6 +321,7 @@ function App() {
             onClose={closeAllPopups}
             onUpdateUser={handleUpdateUser}
             closeByOverlay={closeByOverlay}
+            onCardDelete={handleDeleting}
           />
           <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
@@ -330,12 +329,14 @@ function App() {
             onUpdatePlace={handleAddPlaceSubmit}
             isAddingLoading={isAddingLoading}
             closeByOverlay={closeByOverlay}
+            onCardDelete={handleDeleting}
           />
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
             onUpdateAvatar={handleUpdateAvatar}
             closeByOverlay={closeByOverlay}
+            onCardDelete={handleDeleting}
           />
           <SubmitDeletingCard
             onClose={closeAllPopups}

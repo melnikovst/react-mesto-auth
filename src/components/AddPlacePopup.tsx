@@ -9,7 +9,8 @@ interface IAddPlaceProps {
   onClose: () => void;
   onUpdatePlace: (item: TCard) => void;
   isAddingLoading: boolean;
-  closeByOverlay: (e: any) => void;
+  closeByOverlay: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onCardDelete: (e: iDefault) => void;
 }
 
 const AddPlacePopup: FC<IAddPlaceProps> = ({
@@ -18,6 +19,7 @@ const AddPlacePopup: FC<IAddPlaceProps> = ({
   onUpdatePlace,
   isAddingLoading,
   closeByOverlay,
+  onCardDelete,
 }) => {
   const card = useMemo(() => {
     return {
@@ -62,7 +64,7 @@ const AddPlacePopup: FC<IAddPlaceProps> = ({
       btnText={`${isAddingLoading ? 'Грузится...' : 'Создать'}`}
       closeByOverlay={closeByOverlay}
       isValid={isValid}
-      onCardDelete={undefined}
+      onCardDelete={onCardDelete}
     >
       <fieldset className="form__fieldset">
         <input

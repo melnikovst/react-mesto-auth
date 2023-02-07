@@ -2,13 +2,15 @@ import PopupWithForm from './PopupWithForm';
 import { ChangeEvent, useEffect, useMemo } from 'react';
 import useFormAndValidation from '../utils/useValidation';
 import { TProfile } from '../utils/api';
+import { iDefault } from './App';
 
 const EditAvatarPopup: React.FC<{
   isOpen: boolean;
   onClose: () => void;
   onUpdateAvatar: (object: TProfile) => void;
-  closeByOverlay: (e: any) => void;
-}> = ({ isOpen, onClose, onUpdateAvatar, closeByOverlay }) => {
+  closeByOverlay: (e: React.MouseEvent<HTMLDivElement>) => void;
+  onCardDelete: (e: iDefault) => void;
+}> = ({ isOpen, onClose, onUpdateAvatar, closeByOverlay, onCardDelete }) => {
   const obj = useMemo(() => {
     return {
       avatar: '',
@@ -53,7 +55,7 @@ const EditAvatarPopup: React.FC<{
       btnText="Обновить"
       closeByOverlay={closeByOverlay}
       isValid={isValid}
-      onCardDelete={undefined}
+      onCardDelete={onCardDelete}
     >
       <fieldset className="form__fieldset">
         <input
