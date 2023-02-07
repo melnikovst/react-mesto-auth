@@ -4,7 +4,7 @@ import PopupWithForm from './PopupWithForm';
 export interface ISubmitDeletingProps {
   isOpen: boolean;
   onClose: () => void;
-  onCardDelete: (e: { preventDefault: () => void }) => void;
+  onCardDelete: (e: iDefault) => void;
   isDeletedCardLoading?: boolean;
   closeByOverlay: (e: React.MouseEvent<HTMLDivElement>) => void;
 }
